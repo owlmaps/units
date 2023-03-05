@@ -4,11 +4,9 @@ import { HashRouter } from 'react-router-dom'
 import App from './App'
 import './index.scss'
 
-//  basename='/units/'
-
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
-    <HashRouter>
+    <HashRouter basename='/'>
       <App />
     </HashRouter>    
   </React.StrictMode>,

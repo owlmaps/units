@@ -10,6 +10,7 @@ const App = () => {
     <Route path="ua" element={<UnitsPage who="ua"/>} />
     <Route path="ru" element={<UnitsPage who="ru"/>} />
     <Route path="/*" element={<Navigate to="/" />} />
+    <Route path="*" element={<Navigate to="/" />} />
   </Routes>
   );
 };
