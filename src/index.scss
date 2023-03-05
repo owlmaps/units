@@ -1,0 +1,135 @@
+:root {
+  max-width: 1280px;
+  margin: 1em auto;
+  @media screen and (max-width:1280px) {
+    margin: 1em;
+  }
+}
+
+body {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  box-sizing: border-box;
+  background: #ddd;
+}
+
+.unit-wrapper {
+  margin-bottom: 20px;
+  overflow: hidden;
+  border-radius: 0.5em;
+  border: 1px solid #0057b7;
+  background: #fff;
+  box-shadow: 0px 0px 8px 0 rgba(0,0,0,0.3);
+}
+
+.unit-header {
+  margin: 0;
+  padding: 0.3em;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  background: #aaaaaa;
+  color: #fff;
+
+  &.level-0 {
+    background: #0057b7;
+  }
+  &.level-1 {
+    background: #ffd700;
+    border-top: 1px solid #dab900;
+    border-bottom: 1px solid #dab900;
+  }
+  &.level-2 {
+    background: #aaaaaa;
+    border-top: 1px solid #999898;
+    border-bottom: 1px solid #999898;
+  }
+
+  .unit-title {
+    margin: 0;    
+    flex-grow: 1;
+    margin-right: 2em;
+
+    &.level-0 {
+      color: #fff;
+    }
+    &.level-1 {
+      color: #0057b7;
+    }
+    &.level-2 {
+      color: #fff;
+    }
+
+  }
+  .unit-socials {
+    .unit-socials__inner {
+      background: rgba(255,255,255,0.3);
+      border-radius: 0.5em;
+      padding: 0.2em;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-around;
+      justify-content: space-between;
+    }
+    a {
+      text-decoration: none;
+      display: inline-block;
+      font-size: 14px;
+      color: #fff;
+      width: 35px;
+      height: 20px;
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center;
+      opacity: 0.6;
+      transition: all 0.5s;
+      &:hover {
+        opacity: 1;
+        transform: rotate(360deg);
+      }
+      &.facebook {
+        background-image: url('/images/facebook.svg');
+      }
+      &.twitter {
+        background-image: url('/images/twitter.svg');
+      }
+      &.telegram {
+        background-image: url('/images/telegram.svg');
+      }
+      &.youtube {
+        background-image: url('/images/youtube.svg');
+      }
+    }    
+  }
+  &.subunit .unit-socials .unit-socials__inner {
+    background: rgba(255,255,255,0.5);
+  }
+}
+
+.unit-description {
+  background: #f5f5f5;
+  padding: 0.3em;
+  font-size: 14px;
+  border-bottom: 1px solid #ddd;
+}
+
+.unit-patches {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  padding: 0.3em;
+  .unit-patch {
+    background-size: contain;
+    background-repeat: no-repeat;
+    width: 70px;
+    height: 70px;
+    margin: 0.2em;
+  }
+
+  .patch-image {
+    // width: 55px;
+    height: 70px;
+    margin: 10px;
+  }
+}
