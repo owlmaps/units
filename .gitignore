@@ -25,3 +25,5 @@ dist-ssr
 
 # locally generated json
 public/data.json
+public/ua.json
+public/ru.json

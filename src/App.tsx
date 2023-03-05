@@ -1,44 +1,16 @@
-import React, { useEffect, useState } from 'react';
-import Unit from './Unit';
+
+import { Routes, Route } from 'react-router-dom';
+import Home from './Home';
+import UnitsPage from './UnitsPage';
 
 const App = () => {
-
-  const [isLoading, setIsLoading] = useState(true);
-  const [data, setData] = useState([]);
-
-  const fetchData = () => {
-    fetch('./data.json')
-      .then((res) => res.json())
-      .then((res) => {
-        setData(res);
-        setIsLoading(false);
-      })
-  }
-
-  useEffect(() => {
-    fetchData();
-  }, [])
-
-  // show loading mesage, while fetching data
-  if (isLoading) {
-    return <div className="loading">Loading...</div>
-  }
-
-  // generate all unit components
-  const units: any = [];
-
-  // loop through all base units
-  data.forEach((unitData: Unit, idx) => {
-    const unit= (
-      <div key={idx} className="unit-wrapper">
-        <Unit {...unitData} />
-      </div>
-      );
-    units.push(unit);
-  });
-
-  // finally, return everything
-  return <div className="units">{units}</div>;
+  return (
+  <Routes>
+    <Route path="/" element={<Home />} ></Route>
+    <Route path="ua" element={<UnitsPage who="ua"/>} />
+    <Route path="ru" element={<UnitsPage who="ru"/>} />
+  </Routes>
+  );
 };
 
 export default App;

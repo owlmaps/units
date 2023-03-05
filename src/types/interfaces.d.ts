@@ -1,3 +1,7 @@
+interface UnitsPage {
+  who: string
+}
+
 interface Unit {
   name: string,
   parent?: string,

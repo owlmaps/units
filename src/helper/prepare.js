@@ -4,7 +4,8 @@ import toml from 'toml';
 
 // constants
 const PUBLICPATH = './public';
-const UNITSPATH = './public/units';
+const UNITSPATH_UA = './public/units-ua';
+const UNITSPATH_RU = './public/units-ru';
 const ALLOWEDIMAGETYPES = ['.jpg', '.png', '.svg']
 
 /**
@@ -154,31 +155,40 @@ const readUnit = (unitPath, unitLevel, parent) => {
  * 
  * @param {array} data - array of objects with unit data
  */
-const writeData = (data) => {
-  const outFile = path.join(PUBLICPATH, 'data.json');
-  // fs.writeFileSync(outFile, JSON.stringify(data));
+const writeData = (outFile, data) => {  
   fs.writeFileSync(outFile, JSON.stringify(data, null, 4));
 }
 
 /**
  * run
  */
-const run = () => {
+const run = (who) => {
+  let unitspath = '';
+  if (who === 'ua')  {
+    unitspath = UNITSPATH_UA;
+  } else if (who === 'ru') {
+    unitspath = UNITSPATH_RU;
+  } else {
+    return;
+  }
+  
   // init data
   const data = [];
   // get parent units
-  const parents = getSortedFolder(UNITSPATH);
+  const parents = getSortedFolder(unitspath);
   // read each parent (and its subunits)
   parents.forEach(parent => {
     const level = -1;
-    const parentPath = path.join(UNITSPATH, parent);    
+    const parentPath = path.join(unitspath, parent);    
     const unitData = readUnit(parentPath, level);
     data.push(unitData);
   })
   // write data
-  writeData(data);
+  const outFile = path.join(PUBLICPATH, `${who}.json`);
+  writeData(outFile, data);
 }
 
-run();
+run('ua');
+run('ru');
 
 
