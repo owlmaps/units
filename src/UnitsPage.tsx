@@ -61,7 +61,7 @@ const UnitsPage = (props: UnitsPage) => {
         <Link to="/" id="homelink">[ Home ]</Link> 
         <h3 className="units-title">{title}</h3>
       </header>
-      <div className="maxwrapper">{content}</div>
+      <div className="max-wrapper">{content}</div>
     </div>
   
   );

@@ -2,6 +2,7 @@
   "name": "units-ua",
   "version": "0.1.0",
   "type": "module",
+  "homepage": "https://owlmaps.github.io/units",
   "scripts": {
     "dev": "vite",
     "build": "npm run data:generate && tsc && vite build",
