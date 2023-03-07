@@ -6,7 +6,7 @@ import toml from 'toml';
 const PUBLICPATH = './public';
 const UNITSPATH_UA = './public/units-ua';
 const UNITSPATH_RU = './public/units-ru';
-const ALLOWEDIMAGETYPES = ['.jpg', '.png', '.svg']
+const ALLOWEDIMAGETYPES = ['.jpg', '.png', '.svg', '.gif']
 
 /**
  * 
