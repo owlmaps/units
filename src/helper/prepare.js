@@ -3,31 +3,58 @@ import path from 'node:path';
 import toml from 'toml';
 import sharp from 'sharp';
 import { sha256 } from 'crypto-hash';
-import PreviousMap from 'postcss/lib/previous-map';
 
 // constants
 const PUBLICPATH = './public';
-const PREVIEWPATH = './public/images/preview';
-const UNITSPATH_UA = './public/units-ua';
-const UNITSPATH_RU = './public/units-ru';
+const THUMBNAILPATH = './public/images/patches/thumb';
+const FULLIMAGEPATH = './public/images/patches/full';
+const UNITSPATH_UA = './data/units-ua';
+const UNITSPATH_RU = './data/units-ru';
 const ALLOWEDIMAGETYPES = ['.jpg', '.png', '.svg', '.gif']
+// image processing options
+const THUMBNAIL_OPTIONS = {
+  height: 70,
+  width: null
+}
+const OPTIMIZE_OPTIONS = {
+  quality: 75
+}
 
-const resizeImage = async (imagePath) => {
-  const hash = await sha256(imagePath);
-  const sourcePath = imagePath;
-  const previewPath = path.join(PREVIEWPATH, `${hash}.png`);
-  // to be sure, convert to unix path separators
-  const previewPathPosix = path
-    .join(previewPath)
+
+const imagePathToPosix = (aPath) => {
+  return path
+    .join(aPath)
     .split(path.sep)
     .join(path.posix.sep)
     .replace(/^public\//, "");
+}
+
+
+// create a thumbnail and a jpg (80% quality with orig size)
+const processImage = async (sourcePath) => {
+  // create filename hash
+  const hash = await sha256(sourcePath);
+  // targetPaths
+  const thumbnailPath = path.join(THUMBNAILPATH, `${hash}.jpg`);
+  const fullImagePath = path.join(FULLIMAGEPATH, `${hash}.jpg`);
+  // to be sure, convert to unix path separators
+  const thumbnailPathPosix = imagePathToPosix(thumbnailPath)
+  const fullImagePathPosix = imagePathToPosix(fullImagePath)
+  // process image
   if (fs.existsSync(sourcePath)) {   
     await sharp(sourcePath)
-    .resize({ height: 70, width: null})
-    .toFile(previewPath);
+    .flatten({ background: '#ffffff' })
+    .jpeg(OPTIMIZE_OPTIONS)
+    .toFile(fullImagePath);
+    await sharp(sourcePath)
+    .flatten({ background: '#ffffff' })
+    .resize(THUMBNAIL_OPTIONS)
+    .toFile(thumbnailPath);
   }
-  return previewPathPosix;
+  return {
+    thumb: thumbnailPathPosix,
+    full: fullImagePathPosix
+  }
 }
 
 
@@ -45,19 +72,18 @@ const getImages = async (unitPath) => {
       return ALLOWEDIMAGETYPES.includes(ext);
     });
 
-
-  for (let i = 0; i < filteredImages.length; i++) {
-    const dirent = filteredImages[i];
-    // to be sure, convert to unix path separators
-    const imagePath = path
-      .join(unitPath, dirent.name)
-      .split(path.sep)
-      .join(path.posix.sep)
-      .replace(/^public\//, "");
-    const imagePath2 = path.join(unitPath, dirent.name);
-    const previewPath = await resizeImage(imagePath2);
-    images.push({ preview: previewPath, full: imagePath})
+  try {
+    for (let i = 0; i < filteredImages.length; i++) {
+      const dirent = filteredImages[i];
+      const sourceImagePath = path.join(unitPath, dirent.name);
+      const imageData = await processImage(sourceImagePath);
+      images.push(imageData);
+    }
+  } catch (error) {
+    return images;
   }
+
+
 
   return images;
 }
@@ -135,7 +161,7 @@ const getUnitContent = async (unitPath, parent) => {
   // get meta
   const meta = getMeta(unitPath);
   // get patches
-  const patches = await getImages(unitPath)
+  const patches = await getImages(unitPath);
   // get subunit list
   const subunitList = getSubsContent(unitPath);
   // return
@@ -189,13 +215,17 @@ const writeData = (outFile, data) => {
   fs.writeFileSync(outFile, JSON.stringify(data, null, 4));
 }
 
-const initPreviewFolder = () => {
-  // delete and recreate folder
-  if (fs.existsSync(PREVIEWPATH)) {
-    fs.rmSync(PREVIEWPATH, { recursive: true });
-    
+const initImageFolder = () => {
+  // delete and recreate thumbnail folder
+  if (fs.existsSync(THUMBNAILPATH)) {
+    fs.rmSync(THUMBNAILPATH, { recursive: true });
   }
-  fs.mkdirSync(PREVIEWPATH);
+  fs.mkdirSync(THUMBNAILPATH ,{ recursive: true });
+  // delete and recreate full image folder
+  if (fs.existsSync(FULLIMAGEPATH)) {
+    fs.rmSync(FULLIMAGEPATH, { recursive: true });
+  }
+  fs.mkdirSync(FULLIMAGEPATH, { recursive: true });
 }
 
 
@@ -230,7 +260,7 @@ const run = async (who) => {
 
 (async () => {
   // preparations
-  await initPreviewFolder();
+  initImageFolder();
   await run('ua');
   await run('ru');
 })()

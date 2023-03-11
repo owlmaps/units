@@ -77,7 +77,7 @@ const UnitsPage = (props: UnitsPage) => {
       <div className='scrollbox'>
         <div className="max-wrapper">{units}</div>   
       </div>  
-      <Tooltip anchorSelect=".patch-image" id="patch-tooltip"/>
+      <Tooltip anchorSelect=".patch-tooltip" id="patch-tooltip"/>
     </div>
   
   );
