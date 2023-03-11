@@ -30,7 +30,7 @@ interface PatchCompact {
   patch: Patch;
 }
 interface Patch {
-  preview: string;
+  thumb: string;
   full: string
 }
 

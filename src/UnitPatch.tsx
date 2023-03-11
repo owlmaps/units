@@ -3,20 +3,22 @@ import ModalImage from "react-modal-image";
 
 const UnitPatch = (props: Patch) => {
 
-  const { full, preview } = props;
+  const { thumb, full } = props;
 
   const encodedFullPath = encodeURI(full);
-  const encodedPreviewPath = encodeURI(preview);
+  const encodedThumbnailPath = encodeURI(thumb);
 
   // return final image-box
   return (
     <LazyLoadComponent>
+      <span className="thumbnail-wrapper">
       <ModalImage 
-      small={encodedPreviewPath}
+      small={encodedThumbnailPath}
       large={encodedFullPath}
       className="patch-image"
       imageBackgroundColor="#ffffff"
       ></ModalImage>
+      </span>
     </LazyLoadComponent>
   );
 

@@ -3,25 +3,24 @@ import ModalImage from "react-modal-image";
 
 const UnitPatchCompact = (props: PatchCompact) => {
   const { patch, parents } = props;
-  const { preview, full } = patch;
+  const { thumb, full } = patch;
 
   const encodedFullPath = encodeURI(full);
-  const encodedPreviewPath = encodeURI(preview);
+  const encodedThumbnailPath = encodeURI(thumb);
   const tooltipHTML = parents.join('<br />');
-
-  const zoomImg = {
-    src: encodedFullPath,
-  }
 
   // return final image-box
   return (
     <LazyLoadComponent>
+      <span className="thumbnail-wrapper patch-tooltip" data-tooltip-html={tooltipHTML}>
       <ModalImage 
-      small={encodedPreviewPath}
+      small={encodedThumbnailPath}
       large={encodedFullPath}
       className="patch-image"
       imageBackgroundColor="#ffffff"
+      data-tooltip-html={tooltipHTML}
       ></ModalImage>
+      </span>
     </LazyLoadComponent>
   );
 };
