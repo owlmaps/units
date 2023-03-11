@@ -62,13 +62,17 @@ const UnitsPage = (props: UnitsPage) => {
   ? <div className="loading">Loading...</div>
   : (<div className="units">{units}</div>);
 
+  const compactModeText = isCompactMode
+    ? 'Details'
+    : 'Compact';
+
   // finally, return everything
   return (
     <div className="unitspage">
       <header>
         <Link to="/" id="homelink">[ Home ]</Link> 
         <h3 className="units-title">{title}</h3>
-        <button id="compactmode" onClick={onCompactMode}>[ Compact ]</button>
+        <button id="compactmode" onClick={onCompactMode}>[ {compactModeText} ]</button>
       </header>
       <div className='scrollbox'>
         <div className="max-wrapper">{content}</div>   
