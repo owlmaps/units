@@ -9,7 +9,7 @@ const UnitsPage = (props: UnitsPage) => {
 
   const [isLoading, setIsLoading] = useState(true);
   const [data, setData] = useState([]);
-  const [isCompactMode, setIsCompactMode] = useState(false);
+  const [isCompactMode, setIsCompactMode] = useState(true);
 
   const { who } = props;
 
