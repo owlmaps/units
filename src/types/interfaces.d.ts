@@ -9,7 +9,8 @@ interface Unit {
   patches?: Array<string>,
   subunits?: Array<Unit>,
   level: number,
-  compact?: boolean
+  compact?: boolean,
+  parents?: Array<string>
 }
 
 interface MetaData {
@@ -27,6 +28,6 @@ interface Patch {
   patch: string;
 }
 interface PatchCompact {
-  name: string,
+  parents: Array<string>,
   patch: string;
 }

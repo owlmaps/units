@@ -25,22 +25,22 @@ const Unit = (props: Unit) => {
   const subunitList: Array<JSX.Element> = [];
 
   const _extractAllPatches = (props: Unit) => {
-    const { name, patches, subunits, parent } = props;
-    const fullParent = (parent)
-      ? [parent, name].join('<br />')
-      : name;
+    const { name, patches, subunits, parents } = props;
+    const unitParents = (parents)
+      ? [...parents, name]
+      : [name]
     // console.log(`extract patches from unit ${name}`, props);
     const patchList: Array<any> = [];
     // first get patches of the current unit
     if (patches) {
       patches.forEach((patch) => {
-        patchList.push({ patch, name: fullParent });
+        patchList.push({ patch, parents: unitParents });
       });
     }
     // now get patches of possible subunits
     if (Array.isArray(subunits)) {
       subunits.forEach((subunit) => {
-        subunit.parent = fullParent;
+        subunit.parents = unitParents;
         const subunitPatches = _extractAllPatches(subunit);
         patchList.push(subunitPatches.flat());
       })
