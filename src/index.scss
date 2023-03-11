@@ -10,6 +10,8 @@ body {
   box-sizing: border-box;
   background: #ddd;
   font-family: Arial, Helvetica, sans-serif;
+  font-size: 14px;
+  overflow: hidden;
 }
 body * {
   box-sizing: border-box;
@@ -17,6 +19,13 @@ body * {
 
 #root {
   width: 100%;
+  height: 100%;
+}
+
+.scrollbox {
+  flex: 1 1 auto;
+  position: relative;/* need this to position inner content */
+  overflow-y: auto;
 }
 
 .max-wrapper {
@@ -24,7 +33,7 @@ body * {
   margin: 1em auto;
   @media screen and (max-width:1280px) {
     margin: 1em;
-  }  
+  }
 }
 
 .home {
@@ -56,6 +65,9 @@ body * {
 }
 
 .unitspage {
+  height: 100%;
+  display: flex;
+  flex-direction: column;  
   header {
     background: #0057b7;
     color: #ffd700;
@@ -65,7 +77,7 @@ body * {
     flex-direction: row;
     align-items: center;
     justify-content: center;
-    padding: 0.25em;
+    padding: 0.4em 0.25em;
     position: relative;
     h3 {
       margin: 0;
@@ -77,10 +89,37 @@ body * {
       color: #ffd700;
       position: absolute;
       left: 1em;
-      display: inline-block;    
+      display: inline-block;  
+      font-size: 1.2em;  
+    }
+    #compactmode {
+      border: none;
+      margin: 0;
+      padding: 0;
+      width: auto;
+      overflow: visible;
+      background: transparent;
+      color: #ffd700;
+      position: absolute;
+      right: 1em;
+      font-size: 1.2em; 
+      &:hover {
+        cursor: pointer;
+      }
     }
   }
 
+  #compact-mode-info {
+    background: #ffd700;
+    color: #0057b7;
+    font-size: 1.2em;
+  }
+
+}
+
+#patch-tooltip {
+  // font-weight: bold;
+  font-size: 1.2em;
 }
 
 

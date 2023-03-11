@@ -1,27 +1,76 @@
 import UnitHeader from "./UnitHeader";
 import UnitDescription from "./UnitDescription";
 import UnitPatches from "./UnitPatches";
+import UnitPatchCompact from "./UnitPatchCompact";
 
 const Unit = (props: Unit) => {
 
   // extract all possible data
-  const { name, meta, patches, subunits, level } = props;
+  const { name, meta, patches, subunits, level, compact } = props;
 
   // unit header
   const unitHeader = <UnitHeader {...props}/>
 
   // unit description
-  const unitDescription = <UnitDescription {...meta} />
+  const unitDescription = compact
+    ? null
+    : <UnitDescription {...meta} />
 
   // unit patches
-  const unitPatches = <UnitPatches patches={patches}/>
+  const unitPatches = compact
+    ? null
+    : <UnitPatches patches={patches}/>
 
-  // now adding subunits recursively
+  // subunits
   const subunitList: Array<JSX.Element> = [];
-  if (Array.isArray(subunits)) {
-    subunits.forEach((subunit, idx) => {
-      subunitList.push(<Unit key={idx} {...subunit}/>);
-    });
+
+  const _extractAllPatches = (props: Unit) => {
+    const { name, patches, subunits, parent } = props;
+    const fullParent = (parent)
+      ? [parent, name].join('<br />')
+      : name;
+    // console.log(`extract patches from unit ${name}`, props);
+    const patchList: Array<any> = [];
+    // first get patches of the current unit
+    if (patches) {
+      patches.forEach((patch) => {
+        patchList.push({ patch, name: fullParent });
+      });
+    }
+    // now get patches of possible subunits
+    if (Array.isArray(subunits)) {
+      subunits.forEach((subunit) => {
+        subunit.parent = fullParent;
+        const subunitPatches = _extractAllPatches(subunit);
+        patchList.push(subunitPatches.flat());
+      })
+    }
+    // return patchlist
+    return patchList;
+  }
+
+  // in compact mode we only display patches
+  // in normal mode display the full unit info
+  let patchesCompact: JSX.Element | null = null;
+  if (compact) { 
+    const subunitPatchList: Array<JSX.Element> = [];
+    const patchList = _extractAllPatches(props);
+    // console.log(patchList.flat());
+    patchList
+      .flat()
+      .forEach((patch, idx) => {
+        subunitPatchList.push(<UnitPatchCompact key={idx} {...patch}/>);
+      });
+    if (subunitPatchList && subunitPatchList.length > 0) {
+      patchesCompact = <div className="unit-patches">{subunitPatchList}</div>
+    }   
+    
+  } else {
+    if (Array.isArray(subunits)) {
+      subunits.forEach((subunit, idx) => {
+        subunitList.push(<Unit key={idx} {...subunit}/>);
+      });
+    }
   }
 
   return (
@@ -30,6 +79,7 @@ const Unit = (props: Unit) => {
       {unitDescription}
       {unitPatches}
       {subunitList}
+      {patchesCompact}
     </div>
   );
 };

@@ -1,11 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import {Link} from 'react-router-dom';
 import Unit from './Unit';
+import 'react-tooltip/dist/react-tooltip.css'
+import { Tooltip } from 'react-tooltip';
+
 
 const UnitsPage = (props: UnitsPage) => {
 
   const [isLoading, setIsLoading] = useState(true);
   const [data, setData] = useState([]);
+  const [isCompactMode, setIsCompactMode] = useState(false);
 
   const { who } = props;
 
@@ -22,6 +26,10 @@ const UnitsPage = (props: UnitsPage) => {
       break;  
     default:
       break;
+  }
+
+  const onCompactMode = () => {
+    setIsCompactMode(!isCompactMode);
   }
 
   const fetchData = () => {
@@ -44,7 +52,7 @@ const UnitsPage = (props: UnitsPage) => {
   data.forEach((unitData: Unit, idx) => {
     const unit= (
       <div key={idx} className="unit-wrapper">
-        <Unit {...unitData} />
+        <Unit {...unitData} compact={isCompactMode} />
       </div>
       );
     units.push(unit);
@@ -60,8 +68,12 @@ const UnitsPage = (props: UnitsPage) => {
       <header>
         <Link to="/" id="homelink">[ Home ]</Link> 
         <h3 className="units-title">{title}</h3>
+        <button id="compactmode" onClick={onCompactMode}>[ Compact ]</button>
       </header>
-      <div className="max-wrapper">{content}</div>
+      <div className='scrollbox'>
+        <div className="max-wrapper">{content}</div>   
+      </div>  
+      <Tooltip anchorSelect=".patch-image" id="patch-tooltip"/>
     </div>
   
   );

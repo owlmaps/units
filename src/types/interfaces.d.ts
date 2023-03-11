@@ -8,7 +8,8 @@ interface Unit {
   meta?: MetaData,
   patches?: Array<string>,
   subunits?: Array<Unit>,
-  level: number
+  level: number,
+  compact?: boolean
 }
 
 interface MetaData {
@@ -23,5 +24,9 @@ interface Patches {
   patches?: Array<string>;
 }
 interface Patch {
+  patch: string;
+}
+interface PatchCompact {
+  name: string,
   patch: string;
 }
