@@ -1,31 +1,29 @@
 import { LazyLoadComponent } from 'react-lazy-load-image-component';
-import Zoom from 'react-medium-image-zoom';
-import 'react-medium-image-zoom/dist/styles.css';
+import ModalImage from "react-modal-image";
 
-const UnitPatchCompact = (patchobj: PatchCompact) => {
-  const { parents, patch } = patchobj;
+const UnitPatchCompact = (props: PatchCompact) => {
+  const { patch, parents } = props;
+  const { preview, full } = patch;
 
-  const encodedPatchPath = encodeURI(patch);
-  const style={  
-    backgroundImage: `url(${encodedPatchPath})`,
-  }
-
+  const encodedFullPath = encodeURI(full);
+  const encodedPreviewPath = encodeURI(preview);
   const tooltipHTML = parents.join('<br />');
+
+  const zoomImg = {
+    src: encodedFullPath,
+  }
 
   // return final image-box
   return (
     <LazyLoadComponent>
-      <Zoom>
-        <img
-          alt="patch"
-          src={encodedPatchPath}
-          className="patch-image"
-          data-tooltip-html={tooltipHTML}
-        />
-      </Zoom>
+      <ModalImage 
+      small={encodedPreviewPath}
+      large={encodedFullPath}
+      className="patch-image"
+      imageBackgroundColor="#ffffff"
+      ></ModalImage>
     </LazyLoadComponent>
   );
-
 };
 
 export default UnitPatchCompact;

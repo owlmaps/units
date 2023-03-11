@@ -75,7 +75,7 @@ const UnitsPage = (props: UnitsPage) => {
         <button id="compactmode" onClick={onCompactMode}>[ {compactModeText} ]</button>
       </header>
       <div className='scrollbox'>
-        <div className="max-wrapper">{content}</div>   
+        <div className="max-wrapper">{units}</div>   
       </div>  
       <Tooltip anchorSelect=".patch-image" id="patch-tooltip"/>
     </div>

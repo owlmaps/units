@@ -39,6 +39,21 @@ jobs:
         run: npm install
       - name: Build
         run: npm run build
+      - name: Commit files
+        run: |
+            echo "Checking data on: `date`"
+            if [ -n "$(git status --porcelain)" ]; then
+              echo "new preview images"
+              git config --local user.name actions-user
+              git config --local user.email "actions@github.com"
+              git add ./public/images/*
+              git commit -am "updated preview images - $(date '+%y%m%d_%H%M')"
+              git push origin main
+            else
+              echo "no changes to commit"
+            fi
+        env:
+          TZ: Europe/Paris        
       - name: Setup Pages
         uses: actions/configure-pages@v3
       - name: Upload artifact

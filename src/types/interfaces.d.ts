@@ -6,7 +6,7 @@ interface Unit {
   name: string,
   parent?: string,
   meta?: MetaData,
-  patches?: Array<string>,
+  patches?: Array<Patch>,
   subunits?: Array<Unit>,
   level: number,
   compact?: boolean,
@@ -21,13 +21,17 @@ interface MetaData {
   youtube?: string
 }
 
-interface Patches {
-  patches?: Array<string>;
+interface Unitpatches {
+  patches?: Array<Patch>
 }
-interface Patch {
-  patch: string;
-}
+
 interface PatchCompact {
   parents: Array<string>,
-  patch: string;
+  patch: Patch;
 }
+interface Patch {
+  preview: string;
+  full: string
+}
+
+declare module 'react-modal-image';

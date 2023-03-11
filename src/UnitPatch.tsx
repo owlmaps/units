@@ -1,25 +1,22 @@
 import { LazyLoadComponent } from 'react-lazy-load-image-component';
-import Zoom from 'react-medium-image-zoom';
-import 'react-medium-image-zoom/dist/styles.css';
+import ModalImage from "react-modal-image";
 
+const UnitPatch = (props: Patch) => {
 
-const UnitPatch = ({patch}: Patch) => {
+  const { full, preview } = props;
 
-  const encodedPatchPath = encodeURI(patch);
-  const style={  
-    backgroundImage: `url(${encodedPatchPath})`,
-  }
+  const encodedFullPath = encodeURI(full);
+  const encodedPreviewPath = encodeURI(preview);
 
   // return final image-box
   return (
     <LazyLoadComponent>
-      <Zoom>
-        <img
-          alt="patch"
-          src={encodedPatchPath}
-          className="patch-image"
-        />
-      </Zoom>
+      <ModalImage 
+      small={encodedPreviewPath}
+      large={encodedFullPath}
+      className="patch-image"
+      imageBackgroundColor="#ffffff"
+      ></ModalImage>
     </LazyLoadComponent>
   );
 

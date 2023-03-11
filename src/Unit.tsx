@@ -19,7 +19,9 @@ const Unit = (props: Unit) => {
   // unit patches
   const unitPatches = compact
     ? null
-    : <UnitPatches patches={patches}/>
+    : patches
+      ? <UnitPatches patches={patches}/>
+      : null
 
   // subunits
   const subunitList: Array<JSX.Element> = [];

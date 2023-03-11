@@ -1,34 +1,64 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import toml from 'toml';
+import sharp from 'sharp';
+import { sha256 } from 'crypto-hash';
+import PreviousMap from 'postcss/lib/previous-map';
 
 // constants
 const PUBLICPATH = './public';
+const PREVIEWPATH = './public/images/preview';
 const UNITSPATH_UA = './public/units-ua';
 const UNITSPATH_RU = './public/units-ru';
 const ALLOWEDIMAGETYPES = ['.jpg', '.png', '.svg', '.gif']
+
+const resizeImage = async (imagePath) => {
+  const hash = await sha256(imagePath);
+  const sourcePath = imagePath;
+  const previewPath = path.join(PREVIEWPATH, `${hash}.png`);
+  // to be sure, convert to unix path separators
+  const previewPathPosix = path
+    .join(previewPath)
+    .split(path.sep)
+    .join(path.posix.sep)
+    .replace(/^public\//, "");
+  if (fs.existsSync(sourcePath)) {   
+    await sharp(sourcePath)
+    .resize({ height: 70, width: null})
+    .toFile(previewPath);
+  }
+  return previewPathPosix;
+}
+
 
 /**
  * 
  * @param {string} unitPath 
  * @returns {array} images - array of images
  */
-const getImages = (unitPath) => {
+const getImages = async (unitPath) => {
   const images = [];
-  fs.readdirSync(unitPath, { withFileTypes: true })
+  const filteredImages = fs.readdirSync(unitPath, { withFileTypes: true })
     .filter(dirent => dirent.isFile())
-    .map((dirent) => {
+    .filter(dirent => {
       const ext = path.extname(dirent.name).toLowerCase();
-      if(ALLOWEDIMAGETYPES.includes(ext)) {
-        // to be sure, convert to unix path separators
-        const imagePath = path
-          .join(unitPath, dirent.name)
-          .split(path.sep)
-          .join(path.posix.sep)
-          .replace(/^public\//, "");
-        images.push(imagePath)
-      }
-  });
+      return ALLOWEDIMAGETYPES.includes(ext);
+    });
+
+
+  for (let i = 0; i < filteredImages.length; i++) {
+    const dirent = filteredImages[i];
+    // to be sure, convert to unix path separators
+    const imagePath = path
+      .join(unitPath, dirent.name)
+      .split(path.sep)
+      .join(path.posix.sep)
+      .replace(/^public\//, "");
+    const imagePath2 = path.join(unitPath, dirent.name);
+    const previewPath = await resizeImage(imagePath2);
+    images.push({ preview: previewPath, full: imagePath})
+  }
+
   return images;
 }
 
@@ -99,13 +129,13 @@ const getSubsContent = (aPath) => {
  * 
  * @param {string} unitPath 
  */
-const getUnitContent = (unitPath, parent) => {
+const getUnitContent = async (unitPath, parent) => {
   // name from path
   const name = path.basename(unitPath);
   // get meta
   const meta = getMeta(unitPath);
   // get patches
-  const patches = getImages(unitPath)
+  const patches = await getImages(unitPath)
   // get subunit list
   const subunitList = getSubsContent(unitPath);
   // return
@@ -119,23 +149,23 @@ const getUnitContent = (unitPath, parent) => {
   }
 }
 
-const readUnit = (unitPath, unitLevel, parent) => {
+const readUnit = async (unitPath, unitLevel, parent) => {
   // increase the level
   unitLevel++;
   // get unit content
-  const unitData = getUnitContent(unitPath, parent);
+  const unitData = await getUnitContent(unitPath, parent);
   // add level to unit
   unitData.level = unitLevel;
   // if we have subunits, check them
   if (unitData.subunitList.length > 0) {
-    unitData.subunitList.forEach((subUnitFolder) => {
+    for (const subUnitFolder of unitData.subunitList) {
       const subUnitPath = path.join(unitPath, '_subunits', subUnitFolder);
-      const subUnitData = readUnit(subUnitPath, unitLevel, unitData.name);
+      const subUnitData = await readUnit(subUnitPath, unitLevel, unitData.name);
       // cleanup
       delete subUnitData.subunitList;
       // add to parent unit
       unitData.subunits.push(subUnitData);
-    });
+    }
   }
   // clean unused data
   delete unitData.subunitList;
@@ -159,10 +189,20 @@ const writeData = (outFile, data) => {
   fs.writeFileSync(outFile, JSON.stringify(data, null, 4));
 }
 
+const initPreviewFolder = () => {
+  // delete and recreate folder
+  if (fs.existsSync(PREVIEWPATH)) {
+    fs.rmSync(PREVIEWPATH, { recursive: true });
+    
+  }
+  fs.mkdirSync(PREVIEWPATH);
+}
+
+
 /**
  * run
  */
-const run = (who) => {
+const run = async (who) => {
   let unitspath = '';
   if (who === 'ua')  {
     unitspath = UNITSPATH_UA;
@@ -177,18 +217,21 @@ const run = (who) => {
   // get parent units
   const parents = getSortedFolder(unitspath);
   // read each parent (and its subunits)
-  parents.forEach(parent => {
+  for (const parent of parents) {
     const level = -1;
     const parentPath = path.join(unitspath, parent);    
-    const unitData = readUnit(parentPath, level);
+    const unitData = await readUnit(parentPath, level);
     data.push(unitData);
-  })
+  }
   // write data
   const outFile = path.join(PUBLICPATH, `${who}.json`);
   writeData(outFile, data);
 }
 
-run('ua');
-run('ru');
-
+(async () => {
+  // preparations
+  await initPreviewFolder();
+  await run('ua');
+  await run('ru');
+})()
 

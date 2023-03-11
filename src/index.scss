@@ -231,17 +231,16 @@ body * {
   flex-direction: row;
   flex-wrap: wrap;
   padding: 0.3em;
-  .unit-patch {
-    background-size: contain;
-    background-repeat: no-repeat;
-    width: 70px;
-    height: 70px;
-    margin: 0.2em;
-  }
-
   .patch-image {
-    // width: 55px;
     height: 70px;
     margin: 10px;
   }
+}
+
+.__react_modal_image__modal_container {
+  background-color: rgba(255, 255, 255, 1) !important;
+}
+.__react_modal_image__medium_img {
+  max-width: 80% !important;
+  max-height: 80% !important;
 }
