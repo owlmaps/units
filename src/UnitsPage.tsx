@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import {Link} from 'react-router-dom';
+import debounce from 'lodash.debounce';
+import 'react-tooltip/dist/react-tooltip.css';
 import Unit from './Unit';
-import 'react-tooltip/dist/react-tooltip.css'
 import { Tooltip } from 'react-tooltip';
 
 
@@ -9,10 +10,10 @@ const UnitsPage = (props: UnitsPage) => {
 
   const [isLoading, setIsLoading] = useState(true);
   const [data, setData] = useState([]);
+  const [query, setQuery] = useState<string[]>([]);
   const [isCompactMode, setIsCompactMode] = useState(true);
 
   const { who } = props;
-
   let title = "";
   let datafile = '';
   switch (who) {
@@ -27,6 +28,19 @@ const UnitsPage = (props: UnitsPage) => {
     default:
       break;
   }
+
+  const onQueryChangeHandler = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    const aQuery = (e.target.value).toLocaleLowerCase();
+    if (aQuery === '') {
+      setQuery([]);
+    } else {
+      const queryWords = (e.target.value).toLocaleLowerCase().split(' ');
+      setQuery(queryWords);
+    }
+  }
+  const debouncedQueryHandler = useMemo(
+    () => debounce(onQueryChangeHandler, 750)
+  , []);
 
   const onCompactMode = () => {
     setIsCompactMode(!isCompactMode);
@@ -43,16 +57,63 @@ const UnitsPage = (props: UnitsPage) => {
 
   useEffect(() => {
     fetchData();
-  }, [])
+  }, []);
+
+
+  // filter data
+  const queryCheck = (aString: string): boolean => {
+    for (let i = 0; i < query.length; i++) {
+      const pattern = new RegExp(query[i], 'g');
+      if (!pattern.test(aString)) {
+        return false; // one pattern not found, return false
+      }
+    }
+    return true; // all found
+  }
+  const filterUnit = (unit: Unit) => {
+    const { name, subunits, meta, patches } = unit;
+    // first go into the most nested unit and work your way up
+    let filteredSubUnits: any = [];
+    if (Array.isArray(subunits)) {
+      filteredSubUnits = subunits.filter((subunit) => filterUnit(subunit));
+    }
+    // has the unit matching subunits
+    const hasMatchingSubunits = filteredSubUnits.length > 0;
+    unit.subunits = filteredSubUnits;
+    // check the unit itself
+    const isPatternInUnitName = queryCheck(name.toLocaleLowerCase()); // name check
+    // in compact mode add an empty patch in case there was a pattern match
+    // otherwise nothing would be shown
+    if (isCompactMode && isPatternInUnitName && !patches) {
+      unit.patches = [{ full: 'images/unknown.jpg', thumb: 'images/unknown.jpg' }];
+    }
+    // if unit itself doesn't match, but has matching subunits
+    // remove the units own features (patches, meta) and return true
+    if (!isPatternInUnitName && hasMatchingSubunits) {
+      delete unit.patches;
+      delete unit.meta;
+      return true;
+    }
+    // If the unit itself has matches, just return true
+    // otherwise return false
+    return isPatternInUnitName;
+  }
+  let filteredData = JSON.parse(JSON.stringify(data)) as Unit[]; // deep clone of the array of object
+  if (query.length > 0) {
+    filteredData = filteredData.filter(unit => filterUnit(unit));
+  }
 
   // generate all unit components
   const units: any = [];
 
+  // are we in search mode?
+  const searchmode = query && query.length > 0;
+
   // loop through all base units
-  data.forEach((unitData: Unit, idx) => {
+  filteredData.forEach((unitData: Unit, idx) => {
     const unit= (
       <div key={idx} className="unit-wrapper">
-        <Unit {...unitData} compact={isCompactMode} />
+        <Unit {...unitData} compact={isCompactMode} searchmode={searchmode} />
       </div>
       );
     units.push(unit);
@@ -74,6 +135,9 @@ const UnitsPage = (props: UnitsPage) => {
         <h3 className="units-title">{title}</h3>
         <button id="compactmode" onClick={onCompactMode}>[ {compactModeText} ]</button>
       </header>
+      <div id="filterbox">Filter Units: 
+      <input type="text" onChange={debouncedQueryHandler} placeholder="type a query"/>
+      </div>
       <div className='scrollbox'>
         <div className="max-wrapper">{units}</div>   
       </div>  

@@ -10,6 +10,7 @@ interface Unit {
   subunits?: Array<Unit>,
   level: number,
   compact?: boolean,
+  searchmode?: boolean,
   parents?: Array<string>
 }
 
@@ -23,15 +24,17 @@ interface MetaData {
 
 interface Unitpatches {
   patches?: Array<Patch>
+  compact?: boolean
 }
 
 interface PatchCompact {
   parents: Array<string>,
   patch: Patch;
+  searchmode?: boolean,
 }
 interface Patch {
   thumb: string;
-  full: string
+  full: string,
 }
 
 declare module 'react-modal-image';

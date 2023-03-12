@@ -6,7 +6,7 @@ import UnitPatchCompact from "./UnitPatchCompact";
 const Unit = (props: Unit) => {
 
   // extract all possible data
-  const { name, meta, patches, subunits, level, compact } = props;
+  const { name, meta, patches, subunits, level, compact, searchmode } = props;
 
   // unit header
   const unitHeader = <UnitHeader {...props}/>
@@ -20,7 +20,7 @@ const Unit = (props: Unit) => {
   const unitPatches = compact
     ? null
     : patches
-      ? <UnitPatches patches={patches}/>
+      ? <UnitPatches patches={patches} />
       : null
 
   // subunits
@@ -61,7 +61,7 @@ const Unit = (props: Unit) => {
     patchList
       .flat()
       .forEach((patch, idx) => {
-        subunitPatchList.push(<UnitPatchCompact key={idx} {...patch}/>);
+        subunitPatchList.push(<UnitPatchCompact key={idx} {...patch} searchmode={searchmode} />);
       });
     if (subunitPatchList && subunitPatchList.length > 0) {
       patchesCompact = <div className="unit-patches">{subunitPatchList}</div>
