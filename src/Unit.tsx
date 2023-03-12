@@ -1,5 +1,6 @@
 import UnitHeader from "./UnitHeader";
 import UnitDescription from "./UnitDescription";
+import UnitTags from "./UnitTags";
 import UnitPatches from "./UnitPatches";
 import UnitPatchCompact from "./UnitPatchCompact";
 
@@ -15,6 +16,11 @@ const Unit = (props: Unit) => {
   const unitDescription = compact
     ? null
     : <UnitDescription {...meta} />
+
+  // unit description
+  const unitTags = compact
+    ? null
+    : <UnitTags {...meta} />
 
   // unit patches
   const unitPatches = compact
@@ -79,6 +85,7 @@ const Unit = (props: Unit) => {
     <div className={`unit level-${level}`}>
       {unitHeader}
       {unitDescription}
+      {unitTags}
       {unitPatches}
       {subunitList}
       {patchesCompact}

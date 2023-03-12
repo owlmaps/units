@@ -81,22 +81,35 @@ const UnitsPage = (props: UnitsPage) => {
     const hasMatchingSubunits = filteredSubUnits.length > 0;
     unit.subunits = filteredSubUnits;
     // check the unit itself
-    const isPatternInUnitName = queryCheck(name.toLocaleLowerCase()); // name check
+    let isPatternInUnitName = false;
+    let isPatternInTags = false;
+    let isPatternInDescription = false;
+    if (name) {
+      isPatternInUnitName = queryCheck(name.toLocaleLowerCase()); // name check
+    }
+    if (meta && meta.description !== undefined) {
+      isPatternInDescription = queryCheck(meta.description.toLocaleLowerCase()); // name check
+    }
+    if (meta && meta.tags !== undefined) {
+      console.log(meta.tags)
+      isPatternInTags = queryCheck(meta.tags.toLocaleLowerCase()); // tags check
+    }    
+    const patternFound = isPatternInUnitName || isPatternInTags || isPatternInDescription;
     // in compact mode add an empty patch in case there was a pattern match
     // otherwise nothing would be shown
-    if (isCompactMode && isPatternInUnitName && !patches) {
+    if (isCompactMode && patternFound && !patches) {
       unit.patches = [{ full: 'images/unknown.jpg', thumb: 'images/unknown.jpg' }];
     }
     // if unit itself doesn't match, but has matching subunits
     // remove the units own features (patches, meta) and return true
-    if (!isPatternInUnitName && hasMatchingSubunits) {
+    if (!patternFound && hasMatchingSubunits) {
       delete unit.patches;
       delete unit.meta;
       return true;
     }
     // If the unit itself has matches, just return true
     // otherwise return false
-    return isPatternInUnitName;
+    return patternFound;
   }
   let filteredData = JSON.parse(JSON.stringify(data)) as Unit[]; // deep clone of the array of object
   if (query.length > 0) {

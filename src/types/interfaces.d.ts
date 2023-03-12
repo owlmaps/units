@@ -19,7 +19,8 @@ interface MetaData {
   facebook?: string,
   twitter?: string,
   telegram?: string,
-  youtube?: string
+  youtube?: string,
+  tags?: string
 }
 
 interface Unitpatches {

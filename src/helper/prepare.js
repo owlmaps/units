@@ -130,7 +130,14 @@ const getMeta = (aPath) => {
   if (fs.existsSync(tomlPath)) {
     const tomlContent = fs.readFileSync(tomlPath);
     const tomlData = toml.parse(tomlContent);
-    return tomlData;
+    // clean empty fields
+    const metaList = Object.entries(tomlData)
+      .filter(([_, v]) => v !== "");
+    if (metaList.length === 0) {
+      return null;
+    }
+    const meta = metaList.reduce((acc, [k, v]) => ({ ...acc, [k]: v }), {});
+    return meta;
   }
   return null
 }
