@@ -3,7 +3,7 @@ import ModalImage from "react-modal-image";
 
 const UnitPatch = (props: Patch) => {
 
-  const { thumb, full } = props;
+  let { thumb, full } = props;
 
   const encodedFullPath = encodeURI(full);
   const encodedThumbnailPath = encodeURI(thumb);

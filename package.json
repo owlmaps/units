@@ -12,6 +12,7 @@
   "dependencies": {
     "@types/react-router-dom": "^5.3.3",
     "crypto-hash": "^2.0.1",
+    "lodash.debounce": "^4.0.8",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-lazy-load-image-component": "^1.5.6",
@@ -20,6 +21,7 @@
     "react-tooltip": "^5.10.0"
   },
   "devDependencies": {
+    "@types/lodash.debounce": "^4.0.7",
     "@types/react": "^18.0.27",
     "@types/react-dom": "^18.0.10",
     "@types/react-lazy-load-image-component": "^1.5.2",
