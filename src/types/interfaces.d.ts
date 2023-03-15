@@ -20,6 +20,7 @@ interface MetaData {
   twitter?: string,
   telegram?: string,
   youtube?: string,
+  instagram?: string,
   tags?: string
 }
 
