@@ -1,9 +1,10 @@
 # description
 description = ""
 # socials
-facebook = ""
-telegram = ""
+facebook = "https://www.facebook.com/oborona.lviv"
+telegram = "https://t.me/oboronalviv"
 youtube = ""
 twitter = ""
+instagram = "https://www.instagram.com/oborona.lviv/"
 # tags
 tags = "blue battlements fortifications castle yellow gold galician lion"
