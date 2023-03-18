@@ -262,6 +262,11 @@ body * {
   }
   .patch-image {
     height: 70px;
+    // width: 70px;
+    // object-fit: contain;
+  }
+  .patch-image-compact {
+    height: 70px;
     width: 70px;
     object-fit: contain;
   }

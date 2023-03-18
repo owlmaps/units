@@ -23,7 +23,7 @@ const UnitPatchCompact = (props: PatchCompact) => {
       <ModalImage 
       small={encodedThumbnailPath}
       large={encodedFullPath}
-      className="patch-image"
+      className="patch-image patch-image-compact"
       imageBackgroundColor="#ffffff"
       data-tooltip-html={tooltipHTML}
       ></ModalImage>
