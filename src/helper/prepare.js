@@ -128,16 +128,22 @@ const getSortedFolder = (aPath) => {
 const getMeta = (aPath) => {
   const tomlPath = path.join(aPath, '_meta.toml');
   if (fs.existsSync(tomlPath)) {
-    const tomlContent = fs.readFileSync(tomlPath);
-    const tomlData = toml.parse(tomlContent);
-    // clean empty fields
-    const metaList = Object.entries(tomlData)
-      .filter(([_, v]) => v !== "");
-    if (metaList.length === 0) {
-      return null;
+    try {
+      const tomlContent = fs.readFileSync(tomlPath);
+      const tomlData = toml.parse(tomlContent);
+      // clean empty fields
+      const metaList = Object.entries(tomlData)
+        .filter(([_, v]) => v !== "");
+      if (metaList.length === 0) {
+        return null;
+      }
+      const meta = metaList.reduce((acc, [k, v]) => ({ ...acc, [k]: v }), {});
+      return meta;
+    } catch (error) {
+      console.log(error);
+      console.log(tomlPath);
     }
-    const meta = metaList.reduce((acc, [k, v]) => ({ ...acc, [k]: v }), {});
-    return meta;
+
   }
   return null
 }
