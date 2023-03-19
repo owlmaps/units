@@ -21,6 +21,7 @@ interface MetaData {
   telegram?: string,
   youtube?: string,
   instagram?: string,
+  tiktok?: string,
   tags?: string
 }
 
