@@ -19,7 +19,8 @@ const THUMBNAIL_OPTIONS = {
 const OPTIMIZE_OPTIONS = {
   quality: 75
 }
-
+// a list of all generated image hashes
+const imageHashes = [];
 
 const imagePathToPosix = (aPath) => {
   return path
@@ -32,14 +33,25 @@ const imagePathToPosix = (aPath) => {
 
 // create a thumbnail and a jpg (80% quality with orig size)
 const processImage = async (sourcePath) => {
-  // create filename hash
-  const hash = await sha256(sourcePath);
+  // read file content and create hash
+  const fileContent = fs.readFileSync(sourcePath, 'utf8');
+  const hash = await sha256(fileContent);
+  imageHashes.push(hash); // add hash to global list
   // targetPaths
   const thumbnailPath = path.join(THUMBNAILPATH, `${hash}.jpg`);
   const fullImagePath = path.join(FULLIMAGEPATH, `${hash}.jpg`);
   // to be sure, convert to unix path separators
   const thumbnailPathPosix = imagePathToPosix(thumbnailPath)
   const fullImagePathPosix = imagePathToPosix(fullImagePath)
+  // check if we already have this file
+  if (fs.existsSync(thumbnailPath) && fs.existsSync(fullImagePath)) {
+    return {
+      thumb: thumbnailPathPosix,
+      full: fullImagePathPosix
+    }
+  }
+  console.log(`New image: ${sourcePath}`);
+  // else - convert images
   // process image
   if (fs.existsSync(sourcePath)) {   
     await sharp(sourcePath)
@@ -229,16 +241,13 @@ const writeData = (outFile, data) => {
 }
 
 const initImageFolder = () => {
-  // delete and recreate thumbnail folder
-  if (fs.existsSync(THUMBNAILPATH)) {
-    fs.rmSync(THUMBNAILPATH, { recursive: true });
+  // create folder if not exist
+  if (!fs.existsSync(THUMBNAILPATH)) {
+    fs.mkdirSync(THUMBNAILPATH ,{ recursive: true });
   }
-  fs.mkdirSync(THUMBNAILPATH ,{ recursive: true });
-  // delete and recreate full image folder
-  if (fs.existsSync(FULLIMAGEPATH)) {
-    fs.rmSync(FULLIMAGEPATH, { recursive: true });
+  if (!fs.existsSync(FULLIMAGEPATH)) {
+    fs.mkdirSync(FULLIMAGEPATH, { recursive: true });
   }
-  fs.mkdirSync(FULLIMAGEPATH, { recursive: true });
 }
 
 
@@ -271,10 +280,46 @@ const run = async (who) => {
   writeData(outFile, data);
 }
 
+const cleanOldHashFiles = () => {
+
+  const thumbnailHashes = fs.readdirSync(THUMBNAILPATH, { withFileTypes: true })
+    .filter(dirent => dirent.isFile())
+    .map(dirent => path.parse(dirent.name).name);
+  const fullImageHashes = fs.readdirSync(FULLIMAGEPATH, { withFileTypes: true })
+    .filter(dirent => dirent.isFile())
+    .map(dirent => path.parse(dirent.name).name);
+
+  console.log(`Generated ${imageHashes.length} hashes`);
+  console.log(`Found ${thumbnailHashes.length} hash thumbnails`);
+  console.log(`Found ${fullImageHashes.length} hash full images`);
+
+  // find obsolete files
+  const obsoleteHashes1 = thumbnailHashes.filter(x => imageHashes.indexOf(x) === -1);
+  const obsoleteHashes2 = fullImageHashes.filter(x => imageHashes.indexOf(x) === -1);
+
+  console.log(`Found ${obsoleteHashes1.length} obsolete thumbnail files.`);
+  console.log(`Found ${obsoleteHashes2.length} obsolete full image files.`);
+
+  // delete them
+  for (let i = 0; i < obsoleteHashes1.length; i++) {
+    const hash = obsoleteHashes1[i];
+    const filePath = path.join(THUMBNAILPATH, `${hash}.jpg`);
+    fs.unlinkSync(filePath);    
+  }
+  for (let i = 0; i < obsoleteHashes2.length; i++) {
+    const hash = obsoleteHashes2[i];
+    const filePath = path.join(FULLIMAGEPATH, `${hash}.jpg`);
+    fs.unlinkSync(filePath);    
+  }
+
+}
+
+
 (async () => {
   // preparations
   initImageFolder();
   await run('ua');
   await run('ru');
+  cleanOldHashFiles();
 })()
 
