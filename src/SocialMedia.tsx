@@ -1,5 +1,5 @@
 const SocialMedia = (props: MetaData) => {
-  const { facebook, twitter, telegram, youtube, instagram } = props;
+  const { facebook, twitter, telegram, youtube, instagram, tiktok } = props;
 
   const _facebook = facebook
     ? <a href={facebook} className="facebook" target="_blank"></a>
@@ -16,8 +16,16 @@ const SocialMedia = (props: MetaData) => {
   const _instagram = instagram
     ? <a href={instagram} className="instagram" target="_blank"></a>
     : null;
+  const _tiktok = tiktok
+    ? <a href={tiktok} className="tiktok" target="_blank"></a>
+    : null;
   
-  const hasSocials = _facebook !== null || _twitter !== null || _telegram !== null || _youtube !== null || _instagram !== null;
+  const hasSocials = _facebook !== null
+    || _twitter !== null
+    || _telegram !== null
+    || _youtube !== null
+    || _instagram !== null
+    || _tiktok !== null;
 
   if (!hasSocials) {
     return null;
@@ -25,7 +33,7 @@ const SocialMedia = (props: MetaData) => {
 
   return (
     <div className="unit-socials">
-      <div className="unit-socials__inner">{_facebook}{_twitter}{_telegram}{_youtube}{_instagram}</div>
+      <div className="unit-socials__inner">{_facebook}{_twitter}{_telegram}{_youtube}{_instagram}{_tiktok}</div>
     </div>
   )
 
