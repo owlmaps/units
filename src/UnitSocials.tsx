@@ -1,4 +1,4 @@
-const SocialMedia = (props: MetaData) => {
+const UnitSocials = (props: MetaData) => {
   const { facebook, twitter, telegram, youtube, instagram, tiktok } = props;
 
   const _facebook = facebook
@@ -39,4 +39,4 @@ const SocialMedia = (props: MetaData) => {
 
 }
 
-export default SocialMedia;
+export default UnitSocials;

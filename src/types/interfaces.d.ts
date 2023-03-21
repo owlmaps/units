@@ -22,7 +22,12 @@ interface MetaData {
   youtube?: string,
   instagram?: string,
   tiktok?: string,
+  unitnumber?: string,
   tags?: string
+}
+
+interface UnitNumber extends MetaData {
+  level: number
 }
 
 interface Unitpatches {

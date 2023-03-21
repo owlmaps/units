@@ -153,9 +153,10 @@ body * {
 
 .unit-header {
   margin: 0;
-  padding: 0.3em;
+  padding: 0.3em 0.5em;
   display: flex;
   flex-direction: row;
+  justify-content: right;
   align-items: center;
   background: #aaaaaa;
   color: #fff;
@@ -175,9 +176,7 @@ body * {
   }
 
   .unit-title {
-    margin: 0;    
-    flex-grow: 1;
-    margin-right: 2em;
+    margin: 0 auto 0 0;
 
     &.level-0 {
       color: #fff;
@@ -190,7 +189,25 @@ body * {
     }
 
   }
+  .unit-number {
+    background: rgba(255,255,255,0.3);
+    color: rgba(255,255,255,0.8);
+    border-radius: 0.5em;
+    padding: 0.2em 0.4em;
+    line-height: 20px;
+    font-size: 12px;
+    margin: 0;
+    flex-shrink: 0;
+    &.level-1 {
+      color: rgba(0,0,0,0.4);
+    }
+    &.level-2 {
+      background: rgba(255,255,255,0.3);
+      color: rgba(255,255,255,0.8);
+    }
+  }
   .unit-socials {
+    margin-left: 0.5em;
     .unit-socials__inner {
       background: rgba(255,255,255,0.3);
       border-radius: 0.5em;
