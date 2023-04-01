@@ -71,14 +71,11 @@ body * {
   header {
     background: #0057b7;
     color: #ffd700;
-    flex-shrink: 0;
     text-align: center;
-    display: flex;
-    flex-direction: row;
+    padding: 0.4em 1em;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
     align-items: center;
-    justify-content: center;
-    padding: 0.4em 0.25em;
-    position: relative;
     h3 {
       margin: 0;
       padding: 0;
@@ -87,12 +84,13 @@ body * {
     #homelink {
       text-decoration: none;
       color: #ffd700;
-      position: absolute;
-      left: 1em;
-      display: inline-block;  
       font-size: 1.2em;  
+      display: flex;
+      align-items: center;
     }
     #compactmode {
+      display: block;
+      text-align: right;
       border: none;
       margin: 0;
       padding: 0;
@@ -100,8 +98,6 @@ body * {
       overflow: visible;
       background: transparent;
       color: #ffd700;
-      position: absolute;
-      right: 1em;
       font-size: 1.2em; 
       &:hover {
         cursor: pointer;
@@ -120,13 +116,18 @@ body * {
 #opbox {
   background: #ffd700;
   color: #0057b7;
-  padding: 0.2em 0.95em;
   font-size: 1.2em;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;  
+  text-align: center;
+  padding: 0.4em 1em;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  align-items: center;
 }
+
+
 #filterbox {
+  display: flex;
+  align-items: center;
   input {
     border: 1px solid #0057b7;
     box-shadow: none;
@@ -139,7 +140,18 @@ body * {
     }
   }
 }
-.jumperbox {
+#helpbox {
+  min-width: 240px;
+  a {
+    color: #0057b7;
+    text-decoration: none;
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+#jumperbox {
+  margin-left: auto;
   #hamburger { 
     cursor: pointer;
   }
@@ -349,4 +361,16 @@ body * {
 .__react_modal_image__medium_img {
   max-width: 80% !important;
   max-height: 80% !important;
+}
+
+@media only screen and (max-width: 840px) {
+  #filterbox {
+    display: flex;
+    flex-direction: column;
+    align-items: self-start;
+    input {
+      margin-left: 0;
+    }
+  }
+  
 }

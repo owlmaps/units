@@ -178,7 +178,8 @@ const UnitsPage = (props: UnitsPage) => {
         <div id="filterbox">Filter Units: 
           <input type="text" onChange={debouncedQueryHandler} placeholder="type a query"/>
         </div>
-        <div className="jumperbox">
+        <div id="helpbox"><a href="https://twitter.com/intent/tweet?text=@UAControlMap" target="_blank">Tweet us to report any corrections/mistakes/additions</a></div>
+        <div id="jumperbox">
           <div id="hamburger" onClick={onHamburgerClick}>
             <span className="bar"></span>
             <span className="bar"></span>
