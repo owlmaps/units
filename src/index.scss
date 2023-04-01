@@ -117,22 +117,73 @@ body * {
 
 }
 
-#filterbox {
+#opbox {
   background: #ffd700;
   color: #0057b7;
-  padding: 0.4em 0.25em;
+  padding: 0.2em 0.95em;
   font-size: 1.2em;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;  
+}
+#filterbox {
   input {
     border: 1px solid #0057b7;
     box-shadow: none;
     text-decoration: none;
-    padding: 0.2em;
+    padding: 0.25em;
     margin-left: 1em;
+    border-radius: 0.25em;
     &:focus {
       outline: none;
     }
   }
 }
+.jumperbox {
+  #hamburger { 
+    cursor: pointer;
+  }
+  .bar {
+    display: block;
+    background: #0057b7;   
+    width: 30px;
+    height: 3px;
+    margin: 4px auto;
+    transition: 0.5s; 
+    transform-origin: center;
+  }
+
+  #hamburger.checked .bar:nth-child(2) {
+    opacity:0;
+  }
+  #hamburger.checked .bar:nth-child(1) {
+    transform: translateY(7px) rotate(45deg);
+  }
+  #hamburger.checked .bar:nth-child(3) {
+    transform: translateY(-7px) rotate(-45deg);
+  }
+
+  #jumpercontent {
+    position: fixed;
+    z-index: 99;
+    right: -100%;
+    background: #ffd700;
+    transition: 0.5s; 
+    &.show {
+      right: 0;
+    }
+    .jumper-item {
+      display: block;
+      text-decoration: none;
+      padding: 0.15em 0.5em;
+      color: #0057b7;
+      &:hover {
+        background: #fff;
+      }
+    }
+  }
+}
+
 
 #patch-tooltip {
   // font-weight: bold;

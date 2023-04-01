@@ -45,4 +45,9 @@ interface Patch {
   full: string,
 }
 
+interface baseUnit {
+  name: string,
+  jumpKey: number
+}
+
 declare module 'react-modal-image';

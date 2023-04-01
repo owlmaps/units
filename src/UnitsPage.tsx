@@ -4,6 +4,7 @@ import debounce from 'lodash.debounce';
 import 'react-tooltip/dist/react-tooltip.css';
 import Unit from './Unit';
 import { Tooltip } from 'react-tooltip';
+import { HashLink } from 'react-router-hash-link';
 
 
 const UnitsPage = (props: UnitsPage) => {
@@ -58,6 +59,19 @@ const UnitsPage = (props: UnitsPage) => {
   useEffect(() => {
     fetchData();
   }, []);
+
+  const onHamburgerClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    const elem = e.currentTarget;
+    elem.classList.toggle('checked');
+    const jumperContent = document.getElementById('jumpercontent');
+    jumperContent?.classList.toggle('show')
+  }
+  const onHamburgerItemClick = () => {
+    const hamburger = document.getElementById('hamburger');
+    hamburger?.classList.toggle('checked');
+    const jumperContent = document.getElementById('jumpercontent');
+    jumperContent?.classList.toggle('show')
+  }
 
 
   // filter data
@@ -123,13 +137,25 @@ const UnitsPage = (props: UnitsPage) => {
   const searchmode = query && query.length > 0;
 
   // loop through all base units
+  const baseUnits: baseUnit[] = []
   filteredData.forEach((unitData: Unit, idx) => {
+    const jumpKey = `cat-${idx}`;
     const unit= (
-      <div key={idx} className="unit-wrapper">
+      <div key={idx} id={jumpKey} className="unit-wrapper">
         <Unit {...unitData} compact={isCompactMode} searchmode={searchmode} />
       </div>
       );
     units.push(unit);
+    const baseUnit: baseUnit = {
+      name: unitData.name,
+      jumpKey: idx
+    }
+    baseUnits.push(baseUnit)
+  });
+
+  const jumperContent = baseUnits.map((bu, idx) => {
+    const jumperKey = `cat-${idx}`;
+    return <HashLink to={`#${jumperKey}`} className="jumper-item" onClick={onHamburgerItemClick}>{bu.name}</HashLink>;
   });
 
   const content = isLoading
@@ -148,9 +174,19 @@ const UnitsPage = (props: UnitsPage) => {
         <h3 className="units-title">{title}</h3>
         <button id="compactmode" onClick={onCompactMode}>[ {compactModeText} ]</button>
       </header>
-      <div id="filterbox">Filter Units: 
-      <input type="text" onChange={debouncedQueryHandler} placeholder="type a query"/>
-      </div>
+      <div id="opbox">
+        <div id="filterbox">Filter Units: 
+          <input type="text" onChange={debouncedQueryHandler} placeholder="type a query"/>
+        </div>
+        <div className="jumperbox">
+          <div id="hamburger" onClick={onHamburgerClick}>
+            <span className="bar"></span>
+            <span className="bar"></span>
+            <span className="bar"></span>
+          </div>
+          <div id="jumpercontent">{jumperContent}</div>
+        </div>
+      </div> 
       <div className='scrollbox'>
         <div className="max-wrapper">{units}</div>   
       </div>  
