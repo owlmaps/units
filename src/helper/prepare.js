@@ -10,7 +10,7 @@ const THUMBNAILPATH = './public/images/patches/thumb';
 const FULLIMAGEPATH = './public/images/patches/full';
 const UNITSPATH_UA = './data/units-ua';
 const UNITSPATH_RU = './data/units-ru';
-const ALLOWEDIMAGETYPES = ['.jpg', '.png', '.svg', '.gif']
+const ALLOWEDIMAGETYPES = ['.jpg', '.png', '.svg', '.gif', '.jfif']
 // image processing options
 const THUMBNAIL_OPTIONS = {
   height: 70,
@@ -84,6 +84,7 @@ const getImages = async (unitPath) => {
       return ALLOWEDIMAGETYPES.includes(ext);
     });
 
+
   try {
     for (let i = 0; i < filteredImages.length; i++) {
       const dirent = filteredImages[i];
@@ -92,6 +93,7 @@ const getImages = async (unitPath) => {
       images.push(imageData);
     }
   } catch (error) {
+    console.log(error);
     return images;
   }
 
@@ -154,6 +156,7 @@ const getMeta = (aPath) => {
     } catch (error) {
       console.log(error);
       console.log(tomlPath);
+      throw Error('TOML ERROR');
     }
 
   }
