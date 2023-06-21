@@ -133,10 +133,27 @@ body * {
     box-shadow: none;
     text-decoration: none;
     padding: 0.25em;
+    padding-right: 2em;
     margin-left: 1em;
     border-radius: 0.25em;
     &:focus {
       outline: none;
+    }
+  }
+  button[type="reset"] {
+    border: none;
+    background: #aa0000;
+    color: #fff;
+    text-align: center;
+    font-weight: bold;
+    border-radius: 0.25em;
+    margin-left: -1.7em;
+    &:hover {
+      background: #ff0000;
+      cursor: pointer;
+    }
+    &.hide {
+      display: none;
     }
   }
 }

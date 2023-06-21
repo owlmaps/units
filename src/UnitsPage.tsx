@@ -43,6 +43,10 @@ const UnitsPage = (props: UnitsPage) => {
     () => debounce(onQueryChangeHandler, 750)
   , []);
 
+  const resetForm = () => {
+    setQuery([]);
+  }
+
   const onCompactMode = () => {
     setIsCompactMode(!isCompactMode);
   }
@@ -166,6 +170,8 @@ const UnitsPage = (props: UnitsPage) => {
     ? 'Details'
     : 'Compact';
 
+  const resetButtonClass = searchmode ? 'show' : 'hide';
+
   // finally, return everything
   return (
     <div className="unitspage">
@@ -176,7 +182,10 @@ const UnitsPage = (props: UnitsPage) => {
       </header>
       <div id="opbox">
         <div id="filterbox">Filter Units: 
+        <form>
           <input type="text" onChange={debouncedQueryHandler} placeholder="type a query"/>
+          <button type="reset" className={resetButtonClass} onClick={() => resetForm()}>&times;</button>
+        </form>
         </div>
         <div id="helpbox"><a href="https://twitter.com/intent/tweet?text=@UAControlMap" target="_blank">Tweet us to report any corrections/mistakes/additions</a></div>
         <div id="jumperbox">
