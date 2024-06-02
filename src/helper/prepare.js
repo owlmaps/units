@@ -10,7 +10,7 @@ const THUMBNAILPATH = './public/images/patches/thumb';
 const FULLIMAGEPATH = './public/images/patches/full';
 const UNITSPATH_UA = './data/units-ua';
 const UNITSPATH_RU = './data/units-ru';
-const ALLOWEDIMAGETYPES = ['.jpg', '.png', '.svg', '.gif', '.jfif']
+const ALLOWEDIMAGETYPES = ['.jpg', '.jpeg', '.png', '.svg', '.gif', '.jfif']
 // image processing options
 const THUMBNAIL_OPTIONS = {
   height: 70,
